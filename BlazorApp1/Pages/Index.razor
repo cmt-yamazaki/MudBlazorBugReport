@@ -1,0 +1,76 @@
+﻿@page "/"
+
+<PageTitle>Index</PageTitle>
+
+<h1>Hello, world!</h1>
+
+Welcome to your new app.
+
+<SurveyPrompt Title="How is Blazor working for you?" />
+
+<MudPaper Height="200px" Style="overflow:hidden; position:relative;">
+    <MudDrawerContainer Class="mud-height-full">
+        <MudDrawer @bind-Open="@open" Elevation="0" Variant="@DrawerVariant.Persistent" Color="Color.Primary">
+            <MudDrawerHeader>
+                <MudText Typo="Typo.h6">My App</MudText>
+            </MudDrawerHeader>
+            <MudNavMenu>
+                <MudNavLink Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Dashboard" IconColor="Color.Inherit">Dashboard</MudNavLink>
+                <MudNavLink Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.LocalLibrary" IconColor="Color.Inherit">Library</MudNavLink>
+                <MudNavLink Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.People" IconColor="Color.Inherit">Community</MudNavLink>
+            </MudNavMenu>
+        </MudDrawer>
+        <div class="d-flex justify-center align-center mud-height-full">
+            <MudButton Variant="Variant.Filled" Color="Color.Secondary" OnClick="@ToggleDrawer">Persistent drawer</MudButton>
+        </div>
+    </MudDrawerContainer>
+</MudPaper>
+
+<MudSelect T="string" Label="Coffee" AnchorOrigin="Origin.BottomCenter">
+    <MudSelectItem Value="@("Cappuccino")" />
+    <MudSelectItem Value="@("Cafe Latte")" />
+    <MudSelectItem Value="@("Espresso")" />
+</MudSelect>
+<MudSelect T="double" Label="Price" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter">
+    <MudSelectItem T="double" Value="4.50" />
+    <MudSelectItem T="double" Value="4.99" />
+    <MudSelectItem T="double" Value="3.60" />
+</MudSelect>
+<MudSelect T="Pizza" Label="Pizza" Variant="Variant.Filled" AnchorOrigin="Origin.BottomCenter">
+    <MudSelectItem Value="@(new Pizza("Cardinale"))" />
+    <MudSelectItem Value="@(new Pizza("Diavolo"))" />
+    <MudSelectItem Value="@(new Pizza("Margarita"))" />
+    <MudSelectItem Value="@(new Pizza("Spinaci"))" />
+</MudSelect>
+
+@code {
+    bool open = false;
+
+    void ToggleDrawer()
+    {
+        open = !open;
+    }
+
+    public class Pizza
+    {
+        public Pizza(string name)
+        {
+            Name = name;
+        }
+
+        public readonly string Name;
+
+        // Note: this is important so the MudSelect can compare pizzas
+        public override bool Equals(object o)
+        {
+            var other = o as Pizza;
+            return other?.Name == Name;
+        }
+
+        // Note: this is important too!
+        public override int GetHashCode() => Name?.GetHashCode() ?? 0;
+
+        // Implement this for the Pizza to display correctly in MudSelect
+        public override string ToString() => Name;
+    }
+}
